@@ -2,6 +2,203 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+// ── LANGUAGE SUPPORT ────────────────────────────────────────────
+class LangNotifier extends ValueNotifier<String> {
+  LangNotifier() : super('en');
+}
+
+class LangProvider extends InheritedNotifier<LangNotifier> {
+  const LangProvider({super.key, required LangNotifier notifier, required super.child})
+      : super(notifier: notifier);
+
+  static LangNotifier of(BuildContext context) {
+    final p = context.dependOnInheritedWidgetOfExactType<LangProvider>();
+    return p!.notifier!;
+  }
+}
+
+// Translation map
+const Map<String, Map<String, String>> _tr = {
+  'en': {
+    // Nav labels
+    'nav_home': 'Home',
+    'nav_timeline': 'Timeline',
+    'nav_colleges': 'Colleges',
+    'nav_mylist': 'My List',
+    'nav_quiz': 'Quiz',
+    'nav_preapp': 'Pre-App',
+    'nav_essay': 'Essay',
+    'nav_apply': 'Apply',
+    'nav_aid': 'Aid',
+    'nav_scholarships': 'Scholarships',
+    'nav_residency': 'Residency',
+    'nav_accepted': 'Accepted',
+    'nav_campus': 'Campus',
+    'nav_firstgen': 'First-Gen',
+    // Home screen
+    'home_hello': 'Hello,',
+    'home_future': 'Future Student! 🎓',
+    'home_journey': 'Your College Journey',
+    'home_appname': 'Glory Daze',
+    'home_subtitle': 'Complete guide from application to graduation',
+    'home_sections': 'Explore Sections',
+    'home_learnmore': 'Learn More',
+    'home_consulting': 'College Readiness Consulting',
+    'home_consulting_sub': 'Expert college access advising for NC students',
+    'home_badge1': '14 Sections',
+    'home_badge2': 'My College List',
+    'home_badge3': 'Scholarship Quiz',
+    'home_stat1': 'My College\nList',
+    'home_stat1_sub': 'Track & Save',
+    'home_stat2': 'Scholarship\nQuiz',
+    'home_stat2_sub': 'Find Matches',
+    'home_stat3': 'First-Gen\nHub',
+    'home_stat3_sub': "You've Got This",
+    's_timeline': 'Senior Year Timeline',
+    's_timeline_sub': 'Month-by-month action plan',
+    's_colleges': 'NC College Explorer',
+    's_colleges_sub': 'Search & compare NC colleges',
+    's_mylist': 'My College List',
+    's_mylist_sub': 'Track your applications',
+    's_quiz': 'Scholarship Match Quiz',
+    's_quiz_sub': 'Find scholarships for you',
+    's_preapp': 'Pre-Application',
+    's_preapp_sub': '11th & 12th grade checklist',
+    's_essay': 'Essay Help',
+    's_essay_sub': 'Write a winning college essay',
+    's_apply': 'Application Process',
+    's_apply_sub': 'How to apply step by step',
+    's_aid': 'Financial Aid & FAFSA',
+    's_aid_sub': 'Grants, loans & free money',
+    's_scholarships': 'Scholarships',
+    's_scholarships_sub': 'Find free money for college',
+    's_residency': 'Residency',
+    's_residency_sub': 'Qualify for in-state tuition',
+    's_postaccept': 'Post-Acceptance',
+    's_postaccept_sub': "You got in! What's next?",
+    's_campus': 'Campus Life',
+    's_campus_sub': 'What to expect at college',
+    's_firstgen': 'First-Gen Student Hub',
+    's_firstgen_sub': 'Resources for trailblazers',
+    // Shared header subtitles
+    'hdr_timeline': 'Your month-by-month college action plan.',
+    'hdr_colleges': 'Search and compare North Carolina colleges.',
+    'hdr_mylist': 'Colleges you\u2019re considering.',
+    'hdr_quiz': 'Answer a few questions to find scholarships that fit you.',
+    'hdr_preapp': 'Your year-by-year college checklist from CFNC.',
+    'hdr_essay': 'Write a college essay that gets you noticed.',
+    'hdr_apply': 'How to apply to college step by step.',
+    'hdr_aid': "Don't let money stop you from going to college.",
+    'hdr_scholarships': 'Find free money for college \u2014 no repayment required!',
+    'hdr_residency': 'Qualify for lower in-state tuition rates.',
+    'hdr_postaccept': "You got in! Here's what to do next.",
+    'hdr_campus': 'What to expect when you get to college.',
+    'hdr_firstgen': "You're blazing the trail \u2014 we've got your back.",
+    // Common buttons
+    'btn_visit_cfnc': 'Visit CFNC.org',
+    'btn_search': 'Search by name, city, or program...',
+    'btn_save': 'Save to My List',
+    'btn_remove': 'Remove from My List',
+    'btn_visit': 'Visit College Website',
+    'btn_learn': 'Apply / Learn More',
+    // First-gen
+    'fg_title': 'You Are Not Alone 💪',
+    'fg_remember': 'Remember This 🌟',
+  },
+  'es': {
+    // Nav labels
+    'nav_home': 'Inicio',
+    'nav_timeline': 'Calendario',
+    'nav_colleges': 'Colegios',
+    'nav_mylist': 'Mi Lista',
+    'nav_quiz': 'Quiz',
+    'nav_preapp': 'Pre-Sol',
+    'nav_essay': 'Ensayo',
+    'nav_apply': 'Solicitar',
+    'nav_aid': 'Ayuda',
+    'nav_scholarships': 'Becas',
+    'nav_residency': 'Residencia',
+    'nav_accepted': 'Aceptado',
+    'nav_campus': 'Campus',
+    'nav_firstgen': '1ra-Gen',
+    // Home screen
+    'home_hello': '¡Hola,',
+    'home_future': 'Futuro Estudiante! 🎓',
+    'home_journey': 'Tu Camino a la Universidad',
+    'home_appname': 'Glory Daze',
+    'home_subtitle': 'Guía completa desde la solicitud hasta la graduación',
+    'home_sections': 'Explorar Secciones',
+    'home_learnmore': 'Más Información',
+    'home_consulting': 'Consultoría de Preparación Universitaria',
+    'home_consulting_sub': 'Asesoría experta para estudiantes de NC',
+    'home_badge1': '14 Secciones',
+    'home_badge2': 'Mi Lista de Colegios',
+    'home_badge3': 'Quiz de Becas',
+    'home_stat1': 'Mi Lista de\nColegios',
+    'home_stat1_sub': 'Rastrea y Guarda',
+    'home_stat2': 'Quiz de\nBecas',
+    'home_stat2_sub': 'Encuentra Becas',
+    'home_stat3': 'Centro\n1ra-Gen',
+    'home_stat3_sub': '¡Tú Puedes!',
+    's_timeline': 'Calendario del Último Año',
+    's_timeline_sub': 'Plan de acción mes a mes',
+    's_colleges': 'Explorador de Colegios de NC',
+    's_colleges_sub': 'Busca y compara colegios de NC',
+    's_mylist': 'Mi Lista de Colegios',
+    's_mylist_sub': 'Rastrea tus solicitudes',
+    's_quiz': 'Quiz de Becas',
+    's_quiz_sub': 'Encuentra becas para ti',
+    's_preapp': 'Pre-Solicitud',
+    's_preapp_sub': 'Lista de 11° y 12° grado',
+    's_essay': 'Ayuda con el Ensayo',
+    's_essay_sub': 'Escribe un ensayo universitario ganador',
+    's_apply': 'Proceso de Solicitud',
+    's_apply_sub': 'Cómo solicitar paso a paso',
+    's_aid': 'Ayuda Financiera y FAFSA',
+    's_aid_sub': 'Becas, préstamos y dinero gratis',
+    's_scholarships': 'Becas',
+    's_scholarships_sub': 'Encuentra dinero gratis para la universidad',
+    's_residency': 'Residencia',
+    's_residency_sub': 'Califica para matrícula en tu estado',
+    's_postaccept': 'Post-Aceptación',
+    's_postaccept_sub': '¡Entraste! ¿Qué sigue?',
+    's_campus': 'Vida en el Campus',
+    's_campus_sub': 'Qué esperar en la universidad',
+    's_firstgen': 'Centro Estudiantes 1ra-Gen',
+    's_firstgen_sub': 'Recursos para pioneros',
+    // Shared header subtitles
+    'hdr_timeline': 'Tu plan de acción universitario mes a mes.',
+    'hdr_colleges': 'Busca y compara colegios de Carolina del Norte.',
+    'hdr_mylist': 'Colegios que estás considerando.',
+    'hdr_quiz': 'Responde unas preguntas para encontrar becas que se ajusten a ti.',
+    'hdr_preapp': 'Tu lista de verificación año a año de CFNC.',
+    'hdr_essay': 'Escribe un ensayo universitario que llame la atención.',
+    'hdr_apply': 'Cómo solicitar a la universidad paso a paso.',
+    'hdr_aid': 'No dejes que el dinero te impida ir a la universidad.',
+    'hdr_scholarships': '¡Encuentra dinero gratis para la universidad — sin devolución!',
+    'hdr_residency': 'Califica para las tarifas de matrícula dentro del estado.',
+    'hdr_postaccept': '¡Entraste! Esto es lo que debes hacer a continuación.',
+    'hdr_campus': 'Qué esperar cuando llegues a la universidad.',
+    'hdr_firstgen': 'Eres el pionero — aquí estamos para apoyarte.',
+    // Common buttons
+    'btn_visit_cfnc': 'Visitar CFNC.org',
+    'btn_search': 'Buscar por nombre, ciudad o programa...',
+    'btn_save': 'Guardar en Mi Lista',
+    'btn_remove': 'Quitar de Mi Lista',
+    'btn_visit': 'Visitar Sitio Web del Colegio',
+    'btn_learn': 'Solicitar / Más Información',
+    // First-gen
+    'fg_title': '¡No Estás Solo/a! 💪',
+    'fg_remember': 'Recuerda Esto 🌟',
+  },
+};
+
+String t(BuildContext context, String key) {
+  final lang = LangProvider.of(context).value;
+  return _tr[lang]?[key] ?? _tr['en']![key] ?? key;
+}
+
 void main() => runApp(const CollegeReadyApp());
 
 const navy = Color(0xFF4B9CD3);
@@ -11,18 +208,31 @@ const navyPale = Color(0xFFEAF4FB);
 const borderColor = Color(0xFFB8D9EF);
 const textGray = Color(0xFF5A7A8A);
 
-class CollegeReadyApp extends StatelessWidget {
+class CollegeReadyApp extends StatefulWidget {
   const CollegeReadyApp({super.key});
   @override
+  State<CollegeReadyApp> createState() => _CollegeReadyAppState();
+}
+
+class _CollegeReadyAppState extends State<CollegeReadyApp> {
+  final _lang = LangNotifier();
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'College Ready',
+    return LangProvider(
+      notifier: _lang,
+      child: ValueListenableBuilder<String>(
+        valueListenable: _lang,
+        builder: (ctx, lang, _) => MaterialApp(
+          title: 'Glory Daze',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4B9CD3), primary: const Color(0xFF4B9CD3), secondary: green),
         useMaterial3: true,
       ),
-      home: const MainNav(),
+          home: const MainNav(),
+        ),
+      ),
     );
   }
 }
@@ -73,7 +283,29 @@ class _MainNavState extends State<MainNav> {
                   labelType: NavigationRailLabelType.all,
                   leading: Padding(
                     padding: const EdgeInsets.only(top: 12, bottom: 8),
-                    child: Container(
+                    child: Column(children: [
+                      // EN/ES Language Toggle
+                      Builder(builder: (ctx) {
+                        final ln = LangProvider.of(ctx);
+                        return ValueListenableBuilder<String>(
+                          valueListenable: ln,
+                          builder: (_, lang, __) => Column(children: [
+                            Text(lang == 'en' ? 'EN' : 'ES',
+                              style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
+                            Transform.scale(scale: 0.7,
+                              child: Switch(
+                                value: lang == 'es',
+                                onChanged: (v) => ln.value = v ? 'es' : 'en',
+                                activeColor: const Color(0xFF4B9CD3),
+                                activeTrackColor: Colors.white24,
+                                inactiveThumbColor: Colors.white,
+                                inactiveTrackColor: Colors.white24,
+                              )),
+                          ]),
+                        );
+                      }),
+                      const SizedBox(height: 4),
+                      Container(
                       width: 56, height: 56,
                       decoration: BoxDecoration(
                         color: const Color(0xFF1A2E44),
@@ -98,23 +330,9 @@ class _MainNavState extends State<MainNav> {
                         ),
                       ),
                     ),
+                    ]), // end leading Column
                   ),
-                  destinations: const [
-                    NavigationRailDestination(icon: Icon(Icons.home), label: Text('Home')),
-                    NavigationRailDestination(icon: Icon(Icons.calendar_month), label: Text('Timeline')),
-                    NavigationRailDestination(icon: Icon(Icons.school), label: Text('Colleges')),
-                    NavigationRailDestination(icon: Icon(Icons.bookmark), label: Text('My List')),
-                    NavigationRailDestination(icon: Icon(Icons.quiz), label: Text('Quiz')),
-                    NavigationRailDestination(icon: Icon(Icons.checklist), label: Text('Pre-App')),
-                    NavigationRailDestination(icon: Icon(Icons.draw), label: Text('Essay')),
-                    NavigationRailDestination(icon: Icon(Icons.edit_document), label: Text('Apply')),
-                    NavigationRailDestination(icon: Icon(Icons.attach_money), label: Text('Aid')),
-                    NavigationRailDestination(icon: Icon(Icons.star), label: Text('Scholarships')),
-                    NavigationRailDestination(icon: Icon(Icons.assignment), label: Text('Residency')),
-                    NavigationRailDestination(icon: Icon(Icons.check_circle), label: Text('Accepted')),
-                    NavigationRailDestination(icon: Icon(Icons.apartment), label: Text('Campus')),
-                    NavigationRailDestination(icon: Icon(Icons.favorite), label: Text('First-Gen')),
-                  ],
+                  destinations: _buildDestinations(context),
                 ),
               ),
             ),
@@ -124,6 +342,15 @@ class _MainNavState extends State<MainNav> {
         ],
       ),
     );
+  }
+
+  List<NavigationRailDestination> _buildDestinations(BuildContext context) {
+    final keys = ['nav_home','nav_timeline','nav_colleges','nav_mylist','nav_quiz','nav_preapp','nav_essay','nav_apply','nav_aid','nav_scholarships','nav_residency','nav_accepted','nav_campus','nav_firstgen'];
+    final icons = [Icons.home, Icons.calendar_month, Icons.school, Icons.bookmark, Icons.quiz, Icons.checklist, Icons.draw, Icons.edit_document, Icons.attach_money, Icons.star, Icons.assignment, Icons.check_circle, Icons.apartment, Icons.favorite];
+    return List.generate(keys.length, (i) => NavigationRailDestination(
+      icon: Icon(icons[i]),
+      label: Text(t(context, keys[i]), style: const TextStyle(fontSize: 9)),
+    ));
   }
 }
 
@@ -420,7 +647,7 @@ class _ScholarshipQuizScreenState extends State<ScholarshipQuizScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
-        const _Header('Scholarship Match Quiz', 'Answer 5 questions to find your best matches.'),
+        Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline')=='Timeline' ? 'Scholarship Match Quiz' : 'Quiz de Becas', t(ctx,'nav_timeline')=='Timeline' ? 'Answer 5 questions to find your best matches.' : 'Responde 5 preguntas para encontrar tus mejores becas.')),
         Expanded(child: ListView(padding: const EdgeInsets.all(20), children: [
 
           // Progress
@@ -509,7 +736,7 @@ class _ScholarshipQuizScreenState extends State<ScholarshipQuizScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
-        const _Header('Your Scholarship Matches', 'Based on your answers — apply to all that fit!'),
+        Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline')=='Timeline' ? 'Your Scholarship Matches' : 'Tus Becas', t(ctx,'nav_timeline')=='Timeline' ? 'Based on your answers — apply to all that fit!' : 'Según tus respuestas — ¡solicita todas las que apliquen!')),
         Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
 
           Container(
@@ -617,7 +844,7 @@ class FirstGenScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
-        const _Header('First-Gen Student Hub', 'You\'re blazing the trail — we\'ve got your back.'),
+        Builder(builder: (ctx) => _Header(t(ctx,'nav_firstgen') == 'First-Gen' ? 'First-Gen Student Hub' : 'Centro Estudiantes 1ra-Gen', t(ctx,'hdr_firstgen'))),
         Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
 
           // Hero
@@ -880,7 +1107,7 @@ class _MyCollegeListScreenState extends State<MyCollegeListScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
-        const _Header('My College List', 'Track your applications in one place.'),
+        Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline')=='Timeline' ? 'My College List' : 'Mi Lista de Colegios', t(ctx,'nav_timeline')=='Timeline' ? 'Track your applications in one place.' : 'Rastrea tus solicitudes en un solo lugar.')),
         Expanded(child: saved.isEmpty ? _buildEmpty(context) : ListView(padding: const EdgeInsets.all(16), children: [
 
           // Summary stats row
@@ -1058,10 +1285,10 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Hello,', style: TextStyle(color: textGray, fontSize: 14)),
-                Text('Future Student! 🎓', style: TextStyle(color: green, fontSize: 22, fontWeight: FontWeight.bold)),
-              ]),
+              Builder(builder: (ctx) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(t(ctx,'home_hello'), style: const TextStyle(color: textGray, fontSize: 14)),
+                Text(t(ctx,'home_future'), style: const TextStyle(color: green, fontSize: 22, fontWeight: FontWeight.bold)),
+              ])),
               Container(width: 42, height: 42,
                 decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle,
                   border: Border.all(color: borderColor, width: 1.5),
@@ -1073,19 +1300,21 @@ class HomeScreen extends StatelessWidget {
             Container(width: double.infinity, padding: const EdgeInsets.all(22),
               decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(20)),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text('Your College Journey', style: TextStyle(color: Colors.white60, fontSize: 13)),
-                const SizedBox(height: 6),
-                const Text('College Ready', style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                const Text('Complete guide from application to graduation', style: TextStyle(color: Colors.white60, fontSize: 13, height: 1.4)),
-                const SizedBox(height: 20),
-                Row(children: [
-                  _HeroBadge('14 Sections'),
-                  const SizedBox(width: 10),
-                  _HeroBadge('My College List'),
-                  const SizedBox(width: 10),
-                  _HeroBadge('Scholarship Quiz'),
-                ]),
+                Builder(builder: (ctx) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(t(ctx,'home_journey'), style: const TextStyle(color: Colors.white60, fontSize: 13)),
+                  const SizedBox(height: 6),
+                  Text(t(ctx,'home_appname'), style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  Text(t(ctx,'home_subtitle'), style: const TextStyle(color: Colors.white60, fontSize: 13, height: 1.4)),
+                  const SizedBox(height: 20),
+                  Row(children: [
+                    _HeroBadge(t(ctx,'home_badge1')),
+                    const SizedBox(width: 10),
+                    _HeroBadge(t(ctx,'home_badge2')),
+                    const SizedBox(width: 10),
+                    _HeroBadge(t(ctx,'home_badge3')),
+                  ]),
+                ])),
               ]),
             ),
             const SizedBox(height: 24),
@@ -1097,21 +1326,21 @@ class HomeScreen extends StatelessWidget {
               _StatCard('First-Gen\nHub', 'You\'ve Got This', Icons.favorite, const Color(0xFFCC5500)),
             ]),
             const SizedBox(height: 24),
-            const Text('Explore Sections', style: TextStyle(color: green, fontSize: 16, fontWeight: FontWeight.bold)),
+            Builder(builder: (ctx) => Text(t(ctx,'home_sections'), style: const TextStyle(color: green, fontSize: 16, fontWeight: FontWeight.bold))),
             const SizedBox(height: 14),
-            _SectionTile(context, 'Senior Year Timeline', 'Month-by-month action plan', Icons.calendar_month, const Color(0xFF4B9CD3), 1),
-            _SectionTile(context, 'NC College Explorer', 'Search & compare NC colleges', Icons.school, const Color(0xFF5B9E30), 2),
-            _SectionTile(context, 'My College List', 'Track your applications', Icons.bookmark, const Color(0xFF2E7D32), 3),
-            _SectionTile(context, 'Scholarship Match Quiz', 'Find scholarships for you', Icons.quiz, const Color(0xFF6B3A8F), 4),
-            _SectionTile(context, 'Pre-Application', '11th & 12th grade checklist', Icons.checklist, const Color(0xFF1A5C8A), 5),
-            _SectionTile(context, 'Essay Help', 'Write a winning college essay', Icons.draw, const Color(0xFF8B0000), 6),
-            _SectionTile(context, 'Application Process', 'How to apply step by step', Icons.edit_document, const Color(0xFF13294B), 7),
-            _SectionTile(context, 'Financial Aid & FAFSA', 'Grants, loans & free money', Icons.attach_money, const Color(0xFF2E7D32), 8),
-            _SectionTile(context, 'Scholarships', 'Find free money for college', Icons.star, const Color(0xFFE07B20), 9),
-            _SectionTile(context, 'Residency', 'Qualify for in-state tuition', Icons.assignment, const Color(0xFF0092B2), 10),
-            _SectionTile(context, 'Post-Acceptance', 'You got in! What\'s next?', Icons.check_circle, const Color(0xFF1A5C8A), 11),
-            _SectionTile(context, 'Campus Life', 'What to expect at college', Icons.apartment, const Color(0xFFCC5500), 12),
-            _SectionTile(context, 'First-Gen Student Hub', 'Resources for trailblazers', Icons.favorite, const Color(0xFF8B0000), 13),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_timeline'), t(ctx,'s_timeline_sub'), Icons.calendar_month, const Color(0xFF4B9CD3), 1)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_colleges'), t(ctx,'s_colleges_sub'), Icons.school, const Color(0xFF5B9E30), 2)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_mylist'), t(ctx,'s_mylist_sub'), Icons.bookmark, const Color(0xFF2E7D32), 3)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_quiz'), t(ctx,'s_quiz_sub'), Icons.quiz, const Color(0xFF6B3A8F), 4)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_preapp'), t(ctx,'s_preapp_sub'), Icons.checklist, const Color(0xFF1A5C8A), 5)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_essay'), t(ctx,'s_essay_sub'), Icons.draw, const Color(0xFF8B0000), 6)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_apply'), t(ctx,'s_apply_sub'), Icons.edit_document, const Color(0xFF13294B), 7)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_aid'), t(ctx,'s_aid_sub'), Icons.attach_money, const Color(0xFF2E7D32), 8)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_scholarships'), t(ctx,'s_scholarships_sub'), Icons.star, const Color(0xFFE07B20), 9)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_residency'), t(ctx,'s_residency_sub'), Icons.assignment, const Color(0xFF0092B2), 10)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_postaccept'), t(ctx,'s_postaccept_sub'), Icons.check_circle, const Color(0xFF1A5C8A), 11)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_campus'), t(ctx,'s_campus_sub'), Icons.apartment, const Color(0xFFCC5500), 12)),
+            Builder(builder: (ctx) => _SectionTile(context, t(ctx,'s_firstgen'), t(ctx,'s_firstgen_sub'), Icons.favorite, const Color(0xFF8B0000), 13)),
             const SizedBox(height: 24),
             Container(width: double.infinity, padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
@@ -1219,7 +1448,7 @@ class TimelineScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
-        const _Header('Senior Year Timeline', 'Your month-by-month college action plan.'),
+        Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'Senior Year Timeline' : 'Calendario del Último Año', t(ctx,'hdr_timeline'))),
         Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
           _Card(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Text('Your College Roadmap', style: TextStyle(color: navy, fontSize: 16, fontWeight: FontWeight.bold)),
@@ -1374,13 +1603,13 @@ class _CollegeExplorerScreenState extends State<CollegeExplorerScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
-        const _Header('NC College Explorer', 'Search and compare North Carolina colleges.'),
+        Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'NC College Explorer' : 'Explorador de Colegios de NC', t(ctx,'hdr_colleges'))),
         Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
           Container(margin: const EdgeInsets.only(bottom: 12), padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: borderColor, width: 1.5),
               boxShadow: [BoxShadow(color: navy.withOpacity(0.05), blurRadius: 6)]),
             child: TextField(onChanged: (v) => setState(() => _search = v),
-              decoration: const InputDecoration(hintText: 'Search by name, city, or program...', hintStyle: TextStyle(color: textGray, fontSize: 13), border: InputBorder.none, icon: Icon(Icons.search, color: navy)))),
+              decoration: InputDecoration(hintText: t(context, 'btn_search'), hintStyle: TextStyle(color: textGray, fontSize: 13), border: InputBorder.none, icon: Icon(Icons.search, color: navy)))),
           SizedBox(height: 38,
             child: ListView(scrollDirection: Axis.horizontal, children: _filters.map((f) =>
               GestureDetector(onTap: () => setState(() => _filter = f),
@@ -1507,7 +1736,7 @@ class _CollegeCardState extends State<_CollegeCard> {
                   Icon(isSaved ? Icons.bookmark_remove : Icons.bookmark_add,
                     color: isSaved ? Colors.red.shade400 : const Color(0xFF2E7D32), size: 18),
                   const SizedBox(width: 6),
-                  Text(isSaved ? 'Remove from My List' : 'Save to My List',
+                  Text(isSaved ? t(context, 'btn_remove') : t(context, 'btn_save'),
                     style: TextStyle(color: isSaved ? Colors.red.shade400 : const Color(0xFF2E7D32), fontWeight: FontWeight.w600, fontSize: 13)),
                 ]),
               ),
@@ -1585,7 +1814,7 @@ class _PreAppScreenState extends State<PreAppScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
-        const _Header('Pre-Application', 'Your year-by-year college checklist from CFNC.'),
+        Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'Pre-Application' : 'Pre-Solicitud', t(ctx,'hdr_preapp'))),
         Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
           _Card(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Text('Your College Checklist', style: TextStyle(color: navy, fontSize: 16, fontWeight: FontWeight.bold)),
@@ -1653,7 +1882,7 @@ class EssayScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white, body: Column(children: [
-      const _Header('Essay Help', 'Write a college essay that gets you noticed.'),
+      Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'Essay Help' : 'Ayuda con el Ensayo', t(ctx,'hdr_essay'))),
       Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
         _Card(child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Your Essay is Your Voice', style: TextStyle(color: navy, fontSize: 16, fontWeight: FontWeight.bold)), SizedBox(height: 8), Text('The college essay is your chance to show admissions officers who you are beyond your grades and test scores. Make it count!', style: TextStyle(color: Color(0xFF3D5A6E), fontSize: 13, height: 1.6))])),
         const _SectionHeader(icon: Icons.lightbulb, label: 'Choosing Your Topic'),
@@ -1677,7 +1906,7 @@ class ApplicationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white, body: Column(children: [
-      const _Header('Application Process', 'How to apply to college step by step.'),
+      Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'Application Process' : 'Proceso de Solicitud', t(ctx,'hdr_apply'))),
       Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
         _Card(child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Applying to College', style: TextStyle(color: navy, fontSize: 16, fontWeight: FontWeight.bold)), SizedBox(height: 8), Text('The college application process can feel overwhelming but breaking it into steps makes it manageable. Start early and stay organized!', style: TextStyle(color: Color(0xFF3D5A6E), fontSize: 13, height: 1.6))])),
         const _SectionHeader(icon: Icons.calendar_today, label: 'Key Deadlines to Know'),
@@ -1701,7 +1930,7 @@ class FinancialAidScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white, body: Column(children: [
-      const _Header('Financial Aid & FAFSA', 'Don\'t let money stop you from going to college.'),
+      Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'Financial Aid & FAFSA' : 'Ayuda Financiera y FAFSA', t(ctx,'hdr_aid'))),
       Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
         Container(margin: const EdgeInsets.only(bottom: 16), padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(14)),
           child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Row(children: [Icon(Icons.star, color: green, size: 22), SizedBox(width: 8), Text('Most Students Get Financial Aid!', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold))]), SizedBox(height: 8), Text('Over 85% of college students receive some form of financial aid. The key is applying — you can\'t get money you don\'t apply for!', style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.5))])),
@@ -1724,7 +1953,7 @@ class ScholarshipScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white, body: Column(children: [
-      const _Header('Scholarships', 'Find free money for college — no repayment required!'),
+      Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'Scholarships' : 'Becas', t(ctx,'hdr_scholarships'))),
       Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
         Container(margin: const EdgeInsets.only(bottom: 16), padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(14)),
           child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Row(children: [Icon(Icons.star, color: Color(0xFFFFD700), size: 24), SizedBox(width: 8), Text('Scholarships = Free Money!', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold))]), SizedBox(height: 8), Text('Unlike loans, scholarships never need to be paid back. Apply early, apply often, and never pay to apply!', style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.5))])),
@@ -1788,7 +2017,7 @@ class ResidencyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white, body: Column(children: [
-      const _Header('Residency', 'Qualify for lower in-state tuition rates.'),
+      Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'Residency' : 'Residencia', t(ctx,'hdr_residency'))),
       Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
         _Card(child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('What is Residency?', style: TextStyle(color: navy, fontSize: 16, fontWeight: FontWeight.bold)), SizedBox(height: 8), Text('Your state residency status determines whether you pay in-state or out-of-state tuition. In-state tuition is significantly cheaper — understanding residency requirements can save you over \$70,000!', style: TextStyle(color: Color(0xFF3D5A6E), fontSize: 13, height: 1.6))])),
         const _SectionHeader(icon: Icons.home, label: 'NC Residency Requirements'),
@@ -1808,7 +2037,7 @@ class PostAcceptanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white, body: Column(children: [
-      const _Header('Post-Acceptance', 'You got in! Here\'s what to do next.'),
+      Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'Post-Acceptance' : 'Post-Aceptación', t(ctx,'hdr_postaccept'))),
       Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
         Container(margin: const EdgeInsets.only(bottom: 16), padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: navy, borderRadius: BorderRadius.circular(14)), child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('🎉 Congratulations!', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)), SizedBox(height: 8), Text('Getting your acceptance letter is a huge achievement. But there\'s still important work to do before your first day of class!', style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.5))])),
         const _SectionHeader(icon: Icons.checklist, label: 'Immediate Next Steps'),
@@ -1831,7 +2060,7 @@ class CampusLifeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white, body: Column(children: [
-      const _Header('Campus Life', 'What to expect when you get to college.'),
+      Builder(builder: (ctx) => _Header(t(ctx,'nav_timeline') == 'Timeline' ? 'Campus Life' : 'Vida en el Campus', t(ctx,'hdr_campus'))),
       Expanded(child: ListView(padding: const EdgeInsets.all(16), children: [
         _Card(child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('College is a Big Transition', style: TextStyle(color: navy, fontSize: 16, fontWeight: FontWeight.bold)), SizedBox(height: 8), Text('College life is exciting but also a big adjustment. Knowing what to expect helps you make the most of the experience.', style: TextStyle(color: Color(0xFF3D5A6E), fontSize: 13, height: 1.6))])),
         const _SectionHeader(icon: Icons.class_, label: 'Academics in College'),
